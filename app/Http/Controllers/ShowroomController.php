@@ -98,7 +98,7 @@ public function search(Request $request)
 
     $brandMap = [
       'avanza' => 'toyota',
-        'innova' => 'Toyota',
+        'inova' => 'Toyota',
         'fortuner' => 'Toyota',
         'yaris' => 'Toyota',
         'rush' => 'Toyota',
@@ -109,7 +109,7 @@ public function search(Request $request)
         'velfire' => 'Toyota',
         'veloz' => 'Toyota',
         'Raize' => 'Toyota',
-        'corolla cross' => 'Toyota',
+        'corola cross' => 'Toyota',
         'Land Cruiser' => 'Toyota',
         'corolla' => 'Toyota',
         'agya' => 'Toyota',
