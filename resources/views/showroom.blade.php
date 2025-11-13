@@ -320,6 +320,11 @@
           <p class="text-gray-600 text-lg">Memuat data showroom...</p>
         </div>
       </div>
+      
+      <!-- Pagination Controls -->
+      <div id="pagination" style="display: none;" class="mt-12 flex justify-center items-center gap-2 flex-wrap">
+        <!-- Will be populated by JavaScript -->
+      </div>
     </div>
   </section>
 
@@ -379,10 +384,15 @@
       const locationSelect = document.getElementById('locationSelect');
       const sortSelect     = document.getElementById('sortSelect');
       const resultsDiv     = document.getElementById('results');
-      const searchButton   = document.getElementById('searchButton'); // Pastikan ID ini ada
+      const paginationDiv  = document.getElementById('pagination');
+      const searchButton   = document.getElementById('searchButton');
 
       const LOC_URL    = "{{ url('/showroom/locations') }}";
       const SEARCH_URL = "{{ url('/search') }}";
+
+      let allData = [];
+      let currentPage = 1;
+      const itemsPerPage = 5;
 
       // Brand logo mapping - using local images
       const brandLogos = {
@@ -428,6 +438,185 @@
         return brandLogos['default'];
       }
 
+      function renderShowrooms(data, page = 1) {
+        resultsDiv.innerHTML = '';
+        
+        if (!Array.isArray(data) || data.length === 0) {
+          resultsDiv.innerHTML = `
+            <div class="text-center py-12">
+              <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500 text-xl font-medium">Tidak ada showroom ditemukan</p>
+              <p class="text-gray-400 mt-2">Coba kata kunci atau filter lain</p>
+            </div>
+          `;
+          paginationDiv.style.display = 'none';
+          return;
+        }
+
+        // Calculate pagination
+        const totalPages = Math.ceil(data.length / itemsPerPage);
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedData = data.slice(startIndex, endIndex);
+
+        // Render showrooms
+        paginatedData.forEach(item => {
+          const nama   = item.nama?.value || 'Tidak ada nama';
+          const rating = item.rating?.value || '-';
+          const merek  = item.merek?.value || '-';
+          const lok    = item.lokasi?.value || '-';
+          
+          const logo   = getBrandLogo(merek);
+          const ratingNum = parseFloat(rating) || 0;
+          let stars = '-';
+          if (ratingNum > 0) {
+            const fullStars = '★'.repeat(Math.floor(ratingNum));
+            const emptyStars = '☆'.repeat(5 - Math.floor(ratingNum));
+            stars = fullStars + emptyStars;
+          }
+
+          resultsDiv.innerHTML += `
+            <a href="/showroom/detail-page?nama=${encodeURIComponent(nama)}" class="block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 group cursor-pointer">
+              <div class="flex flex-col md:flex-row">
+                <div class="relative w-full md:w-48 h-48 md:h-auto flex items-center justify-center flex-shrink-0 logo-bg">
+                  <div class="absolute inset-0 bg-white/5"></div>
+                  <img src="${logo}" alt="${merek}" class="relative z-10 w-32 h-32 object-contain drop-shadow-lg p-4" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2736/2736906.png'">
+                </div>
+                <div class="flex-1 p-6">
+                  <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors">${nama}</h3>
+                  <div class="flex items-center gap-2 mb-3">
+                    <i class="fas fa-map-marker-alt text-red-500"></i>
+                    <span class="text-gray-700 font-medium">${lok}</span>
+                  </div>
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="text-yellow-500 text-lg">${stars}</span>
+                    <span class="text-gray-800 font-bold text-lg">${rating}</span>
+                  </div>
+                  <div class="inline-flex items-center gap-2 text-red-600 font-semibold group-hover:gap-3 transition-all">
+                    <span>Lihat Detail</span>
+                    <i class="fas fa-arrow-right"></i>
+                  </div>
+                </div>
+              </div>
+            </a>
+          `;
+        });
+
+        // Render pagination
+        renderPagination(totalPages, page, data.length);
+      }
+
+      function renderPagination(totalPages, currentPage, totalItems) {
+        paginationDiv.innerHTML = '';
+        
+        if (totalPages <= 1) {
+          paginationDiv.style.display = 'none';
+          return;
+        }
+
+        paginationDiv.style.display = 'flex';
+
+        // Showing text
+        const startItem = ((currentPage - 1) * itemsPerPage) + 1;
+        const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+        
+        const showingText = document.createElement('div');
+        showingText.className = 'text-gray-600 font-medium mr-6';
+        showingText.textContent = `Showing ${startItem} to ${endItem} of ${totalItems} results`;
+        paginationDiv.appendChild(showingText);
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+        prevBtn.className = `px-4 py-2 rounded-lg font-semibold transition-all ${
+          currentPage === 1 
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+            : 'bg-white text-red-600 border-2 border-red-200 hover:bg-red-600 hover:text-white hover:border-red-600'
+        }`;
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+          if (currentPage > 1) {
+            goToPage(currentPage - 1);
+          }
+        };
+        paginationDiv.appendChild(prevBtn);
+
+        // Page numbers
+        const maxVisible = 7;
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+        if (endPage - startPage < maxVisible - 1) {
+          startPage = Math.max(1, endPage - maxVisible + 1);
+        }
+
+        // First page
+        if (startPage > 1) {
+          addPageButton(1);
+          if (startPage > 2) {
+            const dots = document.createElement('span');
+            dots.className = 'px-3 py-2 text-gray-400';
+            dots.textContent = '...';
+            paginationDiv.appendChild(dots);
+          }
+        }
+
+        // Page buttons
+        for (let i = startPage; i <= endPage; i++) {
+          addPageButton(i);
+        }
+
+        // Last page
+        if (endPage < totalPages) {
+          if (endPage < totalPages - 1) {
+            const dots = document.createElement('span');
+            dots.className = 'px-3 py-2 text-gray-400';
+            dots.textContent = '...';
+            paginationDiv.appendChild(dots);
+          }
+          addPageButton(totalPages);
+        }
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+        nextBtn.className = `px-4 py-2 rounded-lg font-semibold transition-all ${
+          currentPage === totalPages 
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed' 
+            : 'bg-white text-red-600 border-2 border-red-200 hover:bg-red-600 hover:text-white hover:border-red-600'
+        }`;
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => {
+          if (currentPage < totalPages) {
+            goToPage(currentPage + 1);
+          }
+        };
+        paginationDiv.appendChild(nextBtn);
+      }
+
+      function addPageButton(pageNum) {
+        const btn = document.createElement('button');
+        btn.textContent = pageNum;
+        btn.className = `min-w-[40px] px-4 py-2 rounded-lg font-semibold transition-all ${
+          pageNum === currentPage 
+            ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg' 
+            : 'bg-white text-gray-700 border-2 border-gray-200 hover:bg-red-50 hover:border-red-300 hover:text-red-600'
+        }`;
+        btn.onclick = () => goToPage(pageNum);
+        paginationDiv.appendChild(btn);
+      }
+
+      function goToPage(page) {
+        currentPage = page;
+        renderShowrooms(allData, currentPage);
+        
+        // Scroll to results
+        document.getElementById('daftar-showroom').scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
+
       // Isi dropdown lokasi
       fetch(LOC_URL)
         .then(res => res.json())
@@ -461,75 +650,10 @@
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = await res.json();
 
-          resultsDiv.innerHTML = '';
-          if (!Array.isArray(data) || data.length === 0) {
-            resultsDiv.innerHTML = `
-              <div class="text-center py-12">
-                <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-                <p class="text-gray-500 text-xl font-medium">Tidak ada showroom ditemukan</p>
-                <p class="text-gray-400 mt-2">Coba kata kunci atau filter lain</p>
-              </div>
-            `;
-            return;
-          }
-
-          data.forEach(item => {
-            const nama   = item.nama?.value || 'Tidak ada nama';
-            const rating = item.rating?.value || '-';
-            const merek  = item.merek?.value || '-';
-            const lok    = item.lokasi?.value || '-';
-            
-            const logo   = getBrandLogo(merek);
-            const ratingNum = parseFloat(rating) || 0;
-            let stars = '-';
-            if (ratingNum > 0) {
-              const fullStars = '★'.repeat(Math.floor(ratingNum));
-              const emptyStars = '☆'.repeat(5 - Math.floor(ratingNum));
-              stars = fullStars + emptyStars;
-            }
-
-            // Card horizontal seperti recipe card - dengan link ke detail
-            resultsDiv.innerHTML += `
-              <a href="/showroom/detail-page?nama=${encodeURIComponent(nama)}" class="block bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 group cursor-pointer">
-                
-                <div class="flex flex-col md:flex-row">
-                  
-                  <!-- Gambar di Kiri -->
-                  <div class="relative w-full md:w-48 h-48 md:h-auto flex items-center justify-center flex-shrink-0 logo-bg">
-                    <div class="absolute inset-0 bg-white/5"></div>
-                    <img src="${logo}" alt="${merek}" class="relative z-10 w-32 h-32 object-contain drop-shadow-lg p-4" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2736/2736906.png'">
-                  </div>
-
-                  <!-- Informasi di Kanan -->
-                  <div class="flex-1 p-6">
-                    
-                    <!-- Nama Showroom -->
-                    <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-red-600 transition-colors">${nama}</h3>
-                    
-                    <!-- Lokasi -->
-                    <div class="flex items-center gap-2 mb-3">
-                      <i class="fas fa-map-marker-alt text-red-500"></i>
-                      <span class="text-gray-700 font-medium">${lok}</span>
-                    </div>
-                    
-                    <!-- Rating -->
-                    <div class="flex items-center gap-2 mb-3">
-                      <span class="text-yellow-500 text-lg">${stars}</span>
-                      <span class="text-gray-800 font-bold text-lg">${rating}</span>
-                    </div>
-
-                    <!-- Button Lihat Detail -->
-                    <div class="inline-flex items-center gap-2 text-red-600 font-semibold group-hover:gap-3 transition-all">
-                      <span>Lihat Detail</span>
-                      <i class="fas fa-arrow-right"></i>
-                    </div>
-
-                  </div>
-
-                </div>
-              </a>
-            `;
-          });
+          // Store data and render with pagination
+          allData = Array.isArray(data) ? data : [];
+          currentPage = 1;
+          renderShowrooms(allData, currentPage);
         } catch (err) {
           resultsDiv.innerHTML = `
             <div class="text-center py-12">
