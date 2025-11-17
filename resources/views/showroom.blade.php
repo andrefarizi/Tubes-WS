@@ -1,57 +1,77 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <title>Showroom Mobil Indonesia</title>
+  <title>Sumut Showroom Searching</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-    body { font-family: 'Inter', sans-serif; }
-    :root { --logo-bg: #F3F4F6; }
-    .logo-bg { background-color: var(--logo-bg) !important; }
-    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+      --logo-bg: #F3F4F6;
+    }
+
+    .logo-bg {
+      background-color: var(--logo-bg) !important;
+    }
+
     /* Scroll margin untuk kompensasi navbar sticky */
-    #home, #cara-kerja, #form-searching, #daftar-showroom {
+    #home,
+    #cara-kerja,
+    #form-searching,
+    #daftar-showroom {
       scroll-margin-top: 80px;
     }
-    
+
     /* Animasi marquee untuk logo mobil */
     @keyframes marquee-right {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
     }
-    
+
     @keyframes marquee-left {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0); }
+      0% {
+        transform: translateX(-50%);
+      }
+
+      100% {
+        transform: translateX(0);
+      }
     }
-    
+
     .marquee-container {
       overflow: hidden;
       position: relative;
       background: transparent;
     }
-    
+
     .marquee-content {
       display: flex;
       width: max-content;
     }
-    
+
     .marquee-right {
       animation: marquee-right 40s linear infinite;
     }
-    
+
     .marquee-left {
       animation: marquee-left 40s linear infinite;
     }
-    
-    .marquee-content:hover {
-      animation-play-state: paused;
-    }
-    
+
+
     .logo-item {
       flex-shrink: 0;
       width: 150px;
@@ -63,15 +83,16 @@
       background: white;
       border-radius: 12px;
       padding: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
+      pointer-events: none;
     }
-    
+
     .logo-item:hover {
       transform: scale(1.1);
-      box-shadow: 0 4px 16px rgba(220,38,38,0.3);
+      box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
     }
-    
+
     .logo-item img {
       max-width: 100%;
       max-height: 100%;
@@ -79,12 +100,14 @@
       filter: grayscale(20%);
       transition: filter 0.3s ease;
     }
-    
+
+
     .logo-item:hover img {
       filter: grayscale(0%);
     }
   </style>
 </head>
+
 <body class="bg-gradient-to-br from-red-50 via-white to-red-50">
 
   <!-- Navbar dengan Menu -->
@@ -93,16 +116,16 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center">
           <i class="fas fa-car-side text-white text-3xl"></i>
-          <span class="font-bold text-2xl text-white ml-3">Showroom </span>
+          <span class="font-bold text-2xl text-white ml-3">Showroom Sumut</span>
         </div>
         <div class="hidden md:flex items-center space-x-1">
           <a href="#home" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
             <i class="fas fa-home mr-2"></i>Home
           </a>
-          <a href="#cara-kerja" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
+          <a href="#cara-kerja" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
             <i class="fas fa-info-circle mr-2"></i>Cara Kerja
           </a>
-          <a href="#form-searching" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
+          <a href="#form-searching" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
             <i class="fas fa-search mr-2"></i>Searching
           </a>
           <a href="#daftar-showroom" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
@@ -117,7 +140,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-red-700">
       <div class="px-2 pt-2 pb-3 space-y-1">
@@ -139,10 +162,10 @@
 
   <!-- Section Home -->
   <div id="home" class="relative py-16 bg-gradient-to-br from-gray-100 to-gray-200">
-    
+
     <!-- Background Animasi Logo Mobil - 3 Baris (di belakang) -->
     <div class="absolute inset-0 overflow-hidden">
-      
+
       <!-- Baris 1 - Bergerak ke kanan -->
       <div class="marquee-container py-3">
         <div class="marquee-content marquee-right">
@@ -215,41 +238,38 @@
 
     <!-- Form Pencarian (di depan/menimpa logo) -->
     <div id="form-searching" class="relative z-10 max-w-5xl mx-auto px-4">
-      <div class="bg-white/95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border-2 border-red-200">
+      <div class="bg-white/95 backdrop-blur-sm p-6 rounded-2xl shadow-2xl border-2 border-red-300">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          
+
           <div class="relative md:col-span-2 text-left">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <label class="block text-xl font-bold text-gray-700 mb-4">
               <i class="fas fa-search mr-2 text-red-600"></i>Cari Showroom
             </label>
-            <input 
-              type="text" 
-              id="searchInput" 
+            <input
+              type="text"
+              id="searchInput"
               placeholder="Cari merek, nama, atau alamat..."
-              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none"
-            >
+              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none">
           </div>
 
           <div class="relative text-left">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <label class="block text-xl font-bold text-gray-700 mb-4">
               <i class="fas fa-map-marker-alt mr-2 text-red-600"></i>Lokasi
             </label>
-            <select 
-              id="locationSelect" 
-              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none appearance-none cursor-pointer"
-            >
+            <select
+              id="locationSelect"
+              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none appearance-none cursor-pointer">
               <option value="">Semua Lokasi</option>
-              </select>
+            </select>
           </div>
 
           <div class="relative text-left">
-            <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <label class="block text-xl font-bold text-gray-700 mb-4">
               <i class="fas fa-star mr-2 text-yellow-500"></i>Urutkan Rating
             </label>
-            <select 
-              id="sortSelect" 
-              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none appearance-none cursor-pointer"
-            >
+            <select
+              id="sortSelect"
+              class="w-full px-4 py-3 border-2 border-gray-200 bg-white text-gray-900 rounded-xl focus:ring-4 focus:ring-red-200 focus:border-red-500 transition-all duration-200 outline-none appearance-none cursor-pointer">
               <option value="">Semua Rating</option>
               <option value="desc">Rating Tertinggi</option>
               <option value="asc">Rating Terendah</option>
@@ -257,13 +277,11 @@
           </div>
 
           <div class="mt-4 md:mt-0 md:col-span-4">
-            <button 
+            <button
               id="searchButton"
-              class="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group"
-            >
-              <i class="fas fa-search"></i>
+              class="w-full px-8 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-extrabold rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 group">
               <span>Cari Showroom</span>
-              <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+              <i class="fas fa-search"></i>
             </button>
           </div>
         </div>
@@ -272,13 +290,31 @@
 
   </div>
 
+  <!-- Section Daftar Showroom -->
+  <section id="daftar-showroom" class="bg-gradient-to-br from-red-50 via-white to-red-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Daftar Showroom</h2>
+      <div id="results" class="space-y-6 max-w-4xl mx-auto">
+        <div class="text-center py-8">
+          <i class="fas fa-spinner fa-spin text-4xl text-red-600 mb-3"></i>
+          <p class="text-gray-600 text-lg">Memuat data showroom...</p>
+        </div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div id="pagination" style="display: none;" class="mt-12 flex justify-center items-center gap-2 flex-wrap">
+        <!-- Will be populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
   <!-- Section Cara Kerja -->
   <section id="cara-kerja" class="bg-white py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Cara Kerja</h2>
-      
+
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
+
         <!-- Step 1 -->
         <div class="text-center p-6 bg-gradient-to-br from-red-50 to-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">
           <div class="w-20 h-20 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -309,24 +345,6 @@
       </div>
     </div>
   </section>
-  
-  <!-- Section Daftar Showroom -->
-  <section id="daftar-showroom" class="bg-gradient-to-br from-red-50 via-white to-red-50 py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Daftar Showroom</h2>
-      <div id="results" class="space-y-6 max-w-4xl mx-auto">
-        <div class="text-center py-8">
-          <i class="fas fa-spinner fa-spin text-4xl text-red-600 mb-3"></i>
-          <p class="text-gray-600 text-lg">Memuat data showroom...</p>
-        </div>
-      </div>
-      
-      <!-- Pagination Controls -->
-      <div id="pagination" style="display: none;" class="mt-12 flex justify-center items-center gap-2 flex-wrap">
-        <!-- Will be populated by JavaScript -->
-      </div>
-    </div>
-  </section>
 
   <!-- Footer - Ucapan Terima Kasih -->
   <footer id="footer" class="bg-gradient-to-r from-red-600 to-red-700 text-white py-12">
@@ -354,7 +372,7 @@
   <script>
     // Smooth scroll untuk menu dengan offset untuk navbar sticky
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
+      anchor.addEventListener('click', function(e) {
         e.preventDefault();
         const targetId = this.getAttribute('href');
         const target = document.querySelector(targetId);
@@ -362,12 +380,12 @@
           // Hitung posisi dengan offset navbar (64px = h-16)
           const navbarHeight = 64;
           const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
-          
+
           window.scrollTo({
             top: targetPosition,
             behavior: 'smooth'
           });
-          
+
           // Close mobile menu if open
           document.getElementById('mobile-menu').classList.add('hidden');
         }
@@ -379,15 +397,15 @@
       document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const searchInput    = document.getElementById('searchInput');
+    document.addEventListener("DOMContentLoaded", function() {
+      const searchInput = document.getElementById('searchInput');
       const locationSelect = document.getElementById('locationSelect');
-      const sortSelect     = document.getElementById('sortSelect');
-      const resultsDiv     = document.getElementById('results');
-      const paginationDiv  = document.getElementById('pagination');
-      const searchButton   = document.getElementById('searchButton');
+      const sortSelect = document.getElementById('sortSelect');
+      const resultsDiv = document.getElementById('results');
+      const paginationDiv = document.getElementById('pagination');
+      const searchButton = document.getElementById('searchButton');
 
-      const LOC_URL    = "{{ url('/showroom/locations') }}";
+      const LOC_URL = "{{ url('/showroom/locations') }}";
       const SEARCH_URL = "{{ url('/search') }}";
 
       let allData = [];
@@ -421,26 +439,26 @@
       function getBrandLogo(merek) {
         // Membersihkan string merek
         const cleanMerek = (merek || '').toLowerCase().replace('dealer ', '').trim();
-        
+
         // Cek key spesifik
         if (brandLogos[cleanMerek]) {
-            return brandLogos[cleanMerek];
+          return brandLogos[cleanMerek];
         }
-        
+
         // Cek jika nama merek ada di dalam string
         for (const key in brandLogos) {
-            if (cleanMerek.includes(key)) {
-                return brandLogos[key];
-            }
+          if (cleanMerek.includes(key)) {
+            return brandLogos[key];
+          }
         }
-        
+
         // Fallback
         return brandLogos['default'];
       }
 
       function renderShowrooms(data, page = 1) {
         resultsDiv.innerHTML = '';
-        
+
         if (!Array.isArray(data) || data.length === 0) {
           resultsDiv.innerHTML = `
             <div class="text-center py-12">
@@ -461,12 +479,12 @@
 
         // Render showrooms
         paginatedData.forEach(item => {
-          const nama   = item.nama?.value || 'Tidak ada nama';
+          const nama = item.nama?.value || 'Tidak ada nama';
           const rating = item.rating?.value || '-';
-          const merek  = item.merek?.value || '-';
-          const lok    = item.lokasi?.value || '-';
-          
-          const logo   = getBrandLogo(merek);
+          const merek = item.merek?.value || '-';
+          const lok = item.lokasi?.value || '-';
+
+          const logo = getBrandLogo(merek);
           const ratingNum = parseFloat(rating) || 0;
           let stars = '-';
           if (ratingNum > 0) {
@@ -508,7 +526,7 @@
 
       function renderPagination(totalPages, currentPage, totalItems) {
         paginationDiv.innerHTML = '';
-        
+
         if (totalPages <= 1) {
           paginationDiv.style.display = 'none';
           return;
@@ -519,7 +537,7 @@
         // Showing text
         const startItem = ((currentPage - 1) * itemsPerPage) + 1;
         const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-        
+
         const showingText = document.createElement('div');
         showingText.className = 'text-gray-600 font-medium mr-6';
         showingText.textContent = `Showing ${startItem} to ${endItem} of ${totalItems} results`;
@@ -609,11 +627,11 @@
       function goToPage(page) {
         currentPage = page;
         renderShowrooms(allData, currentPage);
-        
+
         // Scroll to results
-        document.getElementById('daftar-showroom').scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
+        document.getElementById('daftar-showroom').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
         });
       }
 
@@ -635,8 +653,8 @@
       async function searchShowroom() {
         try {
           const keyword = searchInput.value || '';
-          const lokasi  = locationSelect.value || '';
-          const sort    = sortSelect.value || '';
+          const lokasi = locationSelect.value || '';
+          const sort = sortSelect.value || '';
 
           resultsDiv.innerHTML = `
             <div class="text-center py-8">
@@ -667,7 +685,7 @@
 
       // Event listeners
       searchButton.addEventListener('click', searchShowroom);
-      
+
       // Enter key untuk submit
       searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -681,4 +699,5 @@
   </script>
 
 </body>
+
 </html>
