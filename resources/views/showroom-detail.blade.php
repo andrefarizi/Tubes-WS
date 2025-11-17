@@ -106,6 +106,22 @@
                 </a>
               </div>
 
+               <div>
+    <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+      <i class="fas fa-globe text-red-600"></i>
+      Website Resmi
+    </h2>
+    <a id="showroomWebsite"
+       href="#"
+       target="_blank"
+       rel="noopener"
+       class="text-red-600 hover:text-red-700 font-semibold text-base flex items-center gap-2 transition-colors">
+      <i class="fas fa-arrow-up-right-from-square"></i>
+      <span>Kunjungi situs</span>
+    </a>
+  </div>
+
+
             </div>
 
             <!-- Tombol Kembali -->

@@ -29,13 +29,14 @@ class DetailShowroomController extends Controller
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX ex:  <http://www.example.org/showroom#>
 
-                SELECT ?nama ?merek ?lokasi ?alamat ?noTelepon ?jamOperasional ?rating
+                SELECT ?nama ?merek ?lokasi ?alamat ?noTelepon ?jamOperasional ?rating ?website
                 WHERE {
                     ?s rdf:type ex:Showroom ;
                          ex:namaShowroom ?nama ;
                          ex:merek ?merek ;
                          ex:alamat ?alamat ;
-                         ex:berlokasiDi ?lokasi .
+                         ex:berlokasiDi ?lokasi ;
+                         ex:website ?website .
                     OPTIONAL { ?s ex:noTelepon ?noTelepon . }
                     OPTIONAL { ?s ex:jamOperasional ?jamOperasional . }
                     OPTIONAL { ?s ex:rating ?rating . }
