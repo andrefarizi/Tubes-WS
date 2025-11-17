@@ -79,9 +79,10 @@ public function search(Request $request)
     $lokasi     = strtolower($request->query('lokasi', ''));
     $sort       = strtolower($request->query('sort', '')); // '', 'asc', 'desc'
 
-    // leet mapping: 1->i, 4->a, 5->s, 9->g, 0->o
-    $leetMap      = ['1'=>'i','4'=>'a','5'=>'s','9'=>'g','0'=>'o'];
-    $keywordLeet  = strtr($keywordRaw, $leetMap);
+  
+    // Tidak ada leet-mapping, angka tetap apa adanya
+    $keywordLeet = $keywordRaw;
+
 
     // buang selain huruf/angka/spasi/tanda minus, lalu rapikan spasi
     $keyword      = preg_replace('/[^a-z0-9\s\-]/', ' ', $keywordLeet);
@@ -103,15 +104,15 @@ public function search(Request $request)
         'yaris' => 'Toyota',
         'rush' => 'Toyota',
         'voxy' => 'Toyota',
-        'Kijang' => 'Toyota',
+        'kijang' => 'Toyota',
         'calya' => 'Toyota',
-        'Alphard' => 'Toyota',
+        'alphard' => 'Toyota',
         'velfire' => 'Toyota',
         'veloz' => 'Toyota',
         'Raize' => 'Toyota',
-        'corola cross' => 'Toyota',
-        'Land Cruiser' => 'Toyota',
-        'corolla' => 'Toyota',
+        'corola cros' => 'Toyota',
+        'land cruiser' => 'Toyota',
+        'corola' => 'Toyota',
         'agya' => 'Toyota',
         'gr 86' => 'Toyota',
         'camry' => 'Toyota',
@@ -127,7 +128,7 @@ public function search(Request $request)
         'rocky' => 'Daihatsu',
         'sirion' => 'Daihatsu',
         'luxio' => 'Daihatsu',
-        'grandmax' => 'Daihatsu',
+        'grand max' => 'Daihatsu',
         'brio' => 'Honda',
         'civic' => 'Honda',
         'jazz' => 'Honda',
@@ -153,13 +154,13 @@ public function search(Request $request)
         'triton' => 'Mitsubishi',
         'destinator' => 'Mitsubishi',
         'xforce' => 'Mitsubishi',
-        'Fronx' => 'Suzuki',
+        'fronx' => 'Suzuki',
         'ertiga' => 'Suzuki',
         'xl7' => 'Suzuki',
         'apv' => 'Suzuki',
         'jimny' => 'Suzuki',
         'ignis' => 'Suzuki',
-        's-cross' => 'Suzuki',
+        's-cros' => 'Suzuki',
         'grand vitara' => 'Suzuki',
         'spresso' => 'Suzuki',
         'carry' => 'Suzuki',
@@ -189,9 +190,70 @@ public function search(Request $request)
         'BYD DOLPHIN' => 'BYD',
         'BYD M6' => 'BYD',
         'BYD SEALION 7' => 'BYD',
-        'BYD ATTO 1' => 'BYD'
-
+        'BYD ATTO 1' => 'BYD',
+        'Tigo 9' => 'Chery',
+        'Tigo 8' => 'Chery',
+        'Chery j6' => 'Chery',
+        'tigo' => 'Chery',
+        'omoda' => 'Chery',
+        'chery c5' => 'Chery',
+        'captiva' => 'Chevrolet',
+        'aveo' => 'Chevrolet',
+        'spin' => 'Chevrolet',
+        'acitv' => 'Chevrolet',
+        'orlando' => 'Chevrolet',
+        'everest' => 'Ford',
+        'explorer' => 'Ford',
+        'ranger' => 'Ford',
+        'mustang' => 'Ford',
+        'x-trail' => 'Nissan',
+        'livina' => 'Nissan',
+        'tera' => 'Nissan',
+        'leaf' => 'Nissan',
+        'maginite' => 'Nissan',
+        'kicks' => 'Nissan',
+        'cx-3' => 'Mazda',
+        'cx-30' => 'Mazda',
+        'cx-5' => 'Mazda',
+        'cx-8' => 'Mazda',
+        'cx-9' => 'Mazda',
+        'cx-80' => 'Mazda',
+        'cx-60' => 'Mazda',
+        'mazda2' => 'Mazda',
+        'mazda3' => 'Mazda',
+        'mazda6' => 'Mazda',
+        'mx-30' => 'Mazda',
+        'mx-5' => 'Mazda',
+        'zs' => 'MG',
+        'cyberster' => 'MG',
+        'VS' => 'MG',
+        'MG5' => 'MG',
+        'MG HS' => 'MG',
+        'panca' => 'dastun',
+        'mitra ev' => 'wuling',
+        'binguo' => 'wuling',
+        'cloud ev' => 'wuling',
+        'air ev' => 'wuling',
+        'almaz' => 'wuling',
+        'cortez' => 'wuling',
+        'confero' => 'wuling',
+        'formo' => 'wuling',
+        'alvez' => 'wuling',
+        'mu-X' => 'Isuzu',
+        'mercy' => 'Mercedes-Benz',
     ];
+
+    // Check for multi-word brand names first
+    foreach ($brandMap as $key => $value) {
+        if (strpos($keyword, $key) !== false) {
+            $keyword = str_replace($key, $value, $keyword);
+        }
+    }
+
+    
+    // tokenisasi (untuk filter AND per-kata)
+    $tokens = $keyword === '' ? [] : explode(' ', $keyword);
+    
     if (count($tokens) === 1) {
         $t0 = $tokens[0];
         if (isset($brandMap[$t0])) $tokens[0] = $brandMap[$t0];
@@ -247,7 +309,7 @@ WHERE {
   )
 }
 ORDER BY RAND()
-LIMIT 10
+
 ";
     } else {
         // MODE PENCARIAN: normalisasi data → ganti "jl", "jl.", "jln", "jln." menjadi "jalan" di setiap field
@@ -292,7 +354,6 @@ WHERE {
   $lokFilter
 }
 $orderBy
-LIMIT 100
 ";
     }
 
