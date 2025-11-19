@@ -32,7 +32,7 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center">
           <i class="fas fa-car-side text-white text-3xl"></i>
-          <span class="font-bold text-2xl text-white ml-3">Showroom Sumut</span>
+          <span class="font-bold text-2xl text-white ml-3">WheelTrack</span>
         </div>
       </div>
     </div>
@@ -270,7 +270,7 @@
         'suzuki': "{{ asset('images/1280px-suzuki-logo-2svg-618bfa5b29cfbdff54b843503f462364.png') }}",
         'byd': "{{ asset('images/byd-logo-png_seeklogo-546145.png') }}",
         'nissan': "{{ asset('images/Nissan-Logo-PNG-Clipart.png') }}",
-        'mercedes': "{{ asset('images/mercedes-benz-logo-png_seeklogo-190348.png') }}",
+        'mercedes-benz': "{{ asset('images/mercedes-benz-logo-png_seeklogo-190348.png') }}",
         'kia': "{{ asset('images/Kia-Motors-Logo-500x281.png') }}",
         'hyundai': "{{ asset('images/Sejarah-Mobil-Hyundai.png') }}",
         'chevrolet': "{{ asset('images/Chevrolet-logo.png') }}",
@@ -281,6 +281,7 @@
         'datsun': "{{ asset('images/Datsun-logo-2013-2560x1440.png') }}",
         'chery': "{{ asset('images/Chery-Logo-1997.png') }}",
         'ford': "{{ asset('images/580b57fcd9996e24bc43c47c.png') }}",
+        'mazda': "{{ asset('images/mazda_logo.png') }}",
         'default': "{{ asset('images/unnamed.png') }}"
       };
 

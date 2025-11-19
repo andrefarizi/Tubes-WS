@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-  <title>Sumut Showroom Searching</title>
+  <title>WheelTrack</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -116,7 +116,7 @@
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center">
           <i class="fas fa-car-side text-white text-3xl"></i>
-          <span class="font-bold text-2xl text-white ml-3">Showroom Sumut</span>
+          <span class="font-bold text-2xl text-white ml-3">WheelTrack </span>
         </div>
         <div class="hidden md:flex items-center space-x-1">
           <a href="#home" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
@@ -127,9 +127,6 @@
           </a>
           <a href="#form-searching" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
             <i class="fas fa-search mr-2"></i>Searching
-          </a>
-          <a href="#daftar-showroom" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
-            <i class="fas fa-list mr-2"></i>Daftar Showroom
           </a>
         </div>
         <!-- Mobile Menu Button -->
