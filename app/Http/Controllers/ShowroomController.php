@@ -9,7 +9,7 @@ class ShowroomController extends Controller
 {
     public function index()
     {
-        $endpoint = "http://localhost:3030/showroomWS/sparql";
+        $endpoint = "http://localhost:3030/WheelTrack/sparql";
         $query = "
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX ex:  <http://www.example.org/showroom#>
@@ -36,7 +36,7 @@ class ShowroomController extends Controller
     // Dropdown lokasi
     public function getLocations()
     {
-        $endpoint = "http://localhost:3030/showroomWS/sparql";
+        $endpoint = "http://localhost:3030/WheelTrack/sparql";
         $query = "
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX ex:  <http://www.example.org/showroom#>
@@ -71,7 +71,7 @@ class ShowroomController extends Controller
    
 public function search(Request $request)
 {
-    $endpoint   = "http://localhost:3030/showroomWS/sparql";
+    $endpoint   = "http://localhost:3030/WheelTrack/sparql";
 
    
     // --- NORMALISASI KEYWORD (dukung leet & huruf berulang) ---
@@ -79,9 +79,7 @@ public function search(Request $request)
     $lokasi     = strtolower($request->query('lokasi', ''));
     $sort       = strtolower($request->query('sort', '')); // '', 'asc', 'desc'
 
-  
-    // Tidak ada leet-mapping, angka tetap apa adanya
-    $keywordLeet = $keywordRaw;
+   $keywordLeet = $keywordRaw;
 
 
     // buang selain huruf/angka/spasi/tanda minus, lalu rapikan spasi
@@ -241,6 +239,9 @@ public function search(Request $request)
         'alvez' => 'wuling',
         'mu-X' => 'Isuzu',
         'mercy' => 'Mercedes-Benz',
+        's 450' => 'Mercedes-Benz',
+        'glc' => 'Mercedes-Benz',
+        'gls' => 'Mercedes-Benz',
     ];
 
     // Check for multi-word brand names first

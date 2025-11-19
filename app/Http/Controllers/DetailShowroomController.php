@@ -22,14 +22,14 @@ class DetailShowroomController extends Controller
             return response()->json(['error' => 'Nama showroom tidak ditemukan'], 400);
         }
 
-        $endpoint = "http://localhost:3030/showroomWS/sparql";
+        $endpoint = "http://localhost:3030/WheelTrack/sparql";
         
-                // Ambil semua data showroom (pakai predicate yang sama dengan ShowroomController)
+                
                 $query = "
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX ex:  <http://www.example.org/showroom#>
 
-                SELECT ?nama ?merek ?lokasi ?alamat ?noTelepon ?jamOperasional ?rating ?website
+                SELECT DISTINCT ?nama ?merek ?lokasi ?alamat ?noTelepon ?jamOperasional ?rating ?website
                 WHERE {
                     ?s rdf:type ex:Showroom ;
                          ex:namaShowroom ?nama ;
