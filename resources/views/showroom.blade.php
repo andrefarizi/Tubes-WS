@@ -128,9 +128,6 @@
           <a href="#form-searching" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
             <i class="fas fa-search mr-2"></i>Searching
           </a>
-          <a href="#daftar-showroom" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
-            <i class="fas fa-list mr-2"></i>Daftar Showroom
-          </a>
         </div>
         <!-- Mobile Menu Button -->
         <div class="md:hidden">
@@ -152,9 +149,6 @@
         </a>
         <a href="#form-searching" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
           <i class="fas fa-search mr-2"></i>Searching
-        </a>
-        <a href="#daftar-showroom" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
-          <i class="fas fa-list mr-2"></i>Daftar Showroom
         </a>
       </div>
     </div>
@@ -293,7 +287,7 @@
   <!-- Section Daftar Showroom -->
   <section id="daftar-showroom" class="bg-gradient-to-br from-red-50 via-white to-red-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-4xl font-extrabold text-gray-900 mb-12 text-center">Daftar Showroom</h2>
+      <h2 class="text-4xl font-extrabold text-red-600 mb-12 text-center">Daftar Showroom</h2>
       <div id="results" class="space-y-6 max-w-4xl mx-auto">
         <div class="text-center py-8">
           <i class="fas fa-spinner fa-spin text-4xl text-red-600 mb-3"></i>

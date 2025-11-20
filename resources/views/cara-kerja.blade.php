@@ -32,9 +32,6 @@
           <a href="/#form-searching" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
             <i class="fas fa-search mr-2"></i>Searching
           </a>
-          <a href="/#daftar-showroom" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
-            <i class="fas fa-list mr-2"></i>Daftar Showroom
-          </a>
         </div>
         <!-- Mobile Menu Button -->
         <div class="md:hidden">
