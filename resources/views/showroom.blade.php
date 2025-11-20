@@ -212,7 +212,7 @@
           <div class="logo-item"><img src="{{ asset('images/Datsun-logo-2013-2560x1440.png') }}" alt="Datsun"></div>
           <div class="logo-item"><img src="{{ asset('images/Chery-Logo-1997.png') }}" alt="Chery"></div>
           <div class="logo-item"><img src="{{ asset('images/580b57fcd9996e24bc43c47c.png') }}" alt="Ford"></div>
-          <div class="logo-item"><img src="{{ asset('images/unnamed.png') }}" alt="Brand"></div>
+          <div class="logo-item"><img src="{{ asset('images/mazda_logo.png') }}" alt="Mazda"></div>
           <div class="logo-item"><img src="{{ asset('images/toyota-logo-png_seeklogo-171947.png') }}" alt="Toyota"></div>
           <div class="logo-item"><img src="{{ asset('images/BMW.svg.png') }}" alt="BMW"></div>
           <div class="logo-item"><img src="{{ asset('images/3D-Logo-Honda-Chrome-Vertikal.png') }}" alt="Honda"></div>
@@ -221,7 +221,7 @@
           <div class="logo-item"><img src="{{ asset('images/Datsun-logo-2013-2560x1440.png') }}" alt="Datsun"></div>
           <div class="logo-item"><img src="{{ asset('images/Chery-Logo-1997.png') }}" alt="Chery"></div>
           <div class="logo-item"><img src="{{ asset('images/580b57fcd9996e24bc43c47c.png') }}" alt="Ford"></div>
-          <div class="logo-item"><img src="{{ asset('images/unnamed.png') }}" alt="Brand"></div>
+          <div class="logo-item"><img src="{{ asset('images/mazda_logo.png') }}" alt="Mazda"></div>
           <div class="logo-item"><img src="{{ asset('images/toyota-logo-png_seeklogo-171947.png') }}" alt="Toyota"></div>
           <div class="logo-item"><img src="{{ asset('images/BMW.svg.png') }}" alt="BMW"></div>
           <div class="logo-item"><img src="{{ asset('images/3D-Logo-Honda-Chrome-Vertikal.png') }}" alt="Honda"></div>
@@ -392,7 +392,8 @@
         'datsun': "{{ asset('images/Datsun-logo-2013-2560x1440.png') }}",
         'chery': "{{ asset('images/Chery-Logo-1997.png') }}",
         'ford': "{{ asset('images/580b57fcd9996e24bc43c47c.png') }}",
-        'default': "{{ asset('images/unnamed.png') }}"
+        'mazda': "{{ asset('images/mazda_logo.png') }}",
+        
       };
 
       function getBrandLogo(merek) {
