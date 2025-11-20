@@ -227,7 +227,7 @@ public function search(Request $request)
         'VS' => 'MG',
         'MG5' => 'MG',
         'MG HS' => 'MG',
-        'panca' => 'dastun',
+        'panca' => 'datsun',
         'mitra ev' => 'wuling',
         'binguo' => 'wuling',
         'cloud ev' => 'wuling',
