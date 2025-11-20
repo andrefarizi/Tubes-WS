@@ -8,10 +8,10 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
 
     :root {
@@ -20,6 +20,46 @@
 
     .logo-bg {
       background-color: var(--logo-bg) !important;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    .floating-logo {
+      animation: float 3s ease-in-out infinite;
+    }
+
+
+    @keyframes fadeFloat {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .scroll-hidden {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .scroll-show {
+      animation: fadeFloat 0.9s ease-out forwards;
     }
   </style>
 </head>
@@ -31,8 +71,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center">
-          <i class="fas fa-car-side text-white text-3xl"></i>
-          <span class="font-bold text-2xl text-white ml-3">Showroom Sumut</span>
+          <img src="/images/logo 1.png" alt="WheelTrack" class="h-12 w-auto object-contain">
         </div>
       </div>
     </div>
@@ -56,14 +95,21 @@
           <!-- Gambar -->
           <div class="lg:w-2/5 relative flex items-center justify-center p-12 logo-bg">
             <div class="absolute inset-0 bg-black/10"></div>
-            <img id="showroomImage" src="" alt="Showroom" class="relative z-10 w-full max-w-md h-auto object-contain drop-shadow-2xl">
+            <img id="showroomImage" src="" alt="Showroom" class="relative z-10 w-full max-w-md h-auto object-contain drop-shadow-2xl floating-logo">
+            <a href="{{ url('/') }}"
+              class="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl shadow-lg 
+             hover:bg-red-600 hover:text-white transition-all flex items-center gap-2 font-semibold">
+              <i class="fas fa-arrow-left"></i>
+              <span class="">Back</span>
+            </a>
+
           </div>
 
           <!-- Detail -->
           <div class="lg:w-3/5 p-8 lg:p-12 space-y-6 bg-white rounded-t-3xl lg:rounded-r-3xl">
 
             <div>
-              <h1 id="showroomName" class="showroom-title text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3">-</h1>
+              <h1 id="showroomName" class="showroom-title text-3xl lg:text-4xl font-extrabold text-gray-900 mb-3">-</h1>
               <p id="showroomMerek" class="text-red-600 text-xl font-bold mb-4">-</p>
             </div>
 
@@ -101,7 +147,6 @@
                   Kontak
                 </h2>
                 <a id="showroomTelepon" href="tel:" class="text-red-600 hover:text-red-700 font-semibold text-base flex items-center gap-2 transition-colors">
-                  <i class="fas fa-phone-volume"></i>
                   <span>-</span>
                 </a>
               </div>
@@ -111,19 +156,18 @@
                   <i class="fas fa-globe text-red-600"></i>
                   Website Resmi
                 </h2>
-                <a id="showroomWebsite" href="#" target="_blank" rel="noopener" class="text-red-600 hover:text-red-700 font-semibold text-base flex items-center gap-2 transition-colors">
+                <a id="showroomWebsite" href="#" target="_blank" rel="noopener"
+                  class="inline-flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 
+                  text-white font-semibold rounded-xl shadow-md hover:from-red-600 hover:to-red-700 
+                    transition-all duration-200">
                   <i class="fas fa-arrow-up-right-from-square"></i>
-                  <span>Kunjungi situs</span>
+                  <span>Kunjungi Situs</span>
                 </a>
+
               </div>
             </div>
 
-            <div class="pt-6">
-              <a href="{{ url('/') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-lg">
-                <i class="fas fa-arrow-left"></i>
-                <span>Kembali ke Daftar</span>
-              </a>
-            </div>
+
 
           </div>
 
@@ -144,15 +188,22 @@
     </div>
 
     <!-- FOTO MOBIL -->
-    <div id="mobilContainer" class="hidden mt-10">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-        <i class="fas fa-car text-red-600"></i>
+    <div id="mobilContainer" class="hidden mt-20 mb-2">
+      <h2 class="text-2xl font-extrabold text-red-600 mb-4 flex items-center gap-4 text-align-center justify-center">
+        <i class="fas fa-car text-gray-800"></i>
         Produk Showroom
+        <i class="fas fa-car text-gray-800"></i>
       </h2>
 
       <div class="w-full bg-white p-6 rounded-3xl shadow-xl flex justify-center">
-        <img id="mobilImage" src="" alt="Foto Mobil" class="w-full max-w-4xl h-auto object-contain rounded-3xl shadow-lg bg-white">
+        <img
+          id="mobilImage"
+          src=""
+          alt="Foto Mobil"
+          class="w-full max-w-4xl h-auto object-contain rounded-3xl shadow-lg bg-white scroll-hidden">
       </div>
+
+
     </div>
 
   </main>
@@ -235,7 +286,7 @@
       document.getElementById('loading').classList.add('hidden');
       document.getElementById('detailContent').classList.remove('hidden');
 
-      
+
       const mobilImage = document.getElementById('mobilImage');
       const mobilContainer = document.getElementById('mobilContainer');
 
@@ -271,7 +322,7 @@
         'suzuki': "{{ asset('images/1280px-suzuki-logo-2svg-618bfa5b29cfbdff54b843503f462364.png') }}",
         'byd': "{{ asset('images/byd-logo-png_seeklogo-546145.png') }}",
         'nissan': "{{ asset('images/Nissan-Logo-PNG-Clipart.png') }}",
-        'mercedes': "{{ asset('images/mercedes-benz-logo-png_seeklogo-190348.png') }}",
+        'mercedes-benz': "{{ asset('images/mercedes-benz-logo-png_seeklogo-190348.png') }}",
         'kia': "{{ asset('images/Kia-Motors-Logo-500x281.png') }}",
         'hyundai': "{{ asset('images/Sejarah-Mobil-Hyundai.png') }}",
         'chevrolet': "{{ asset('images/Chevrolet-logo.png') }}",
@@ -282,13 +333,27 @@
         'datsun': "{{ asset('images/Datsun-logo-2013-2560x1440.png') }}",
         'chery': "{{ asset('images/Chery-Logo-1997.png') }}",
         'ford': "{{ asset('images/580b57fcd9996e24bc43c47c.png') }}",
+        'mazda': "{{ asset('images/mazda_logo.png') }}",
         'default': "{{ asset('images/unnamed.png') }}"
       };
 
       const key = (merek || '').toLowerCase().replace('dealer ', '').trim();
       return logos[key] || logos['default'];
     }
+
+    const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('scroll-show');
+        observer.unobserve(entry.target); // animasi sekali saja
+      }
+    });
+  }, { threshold: 0.2 });
+
+  const target = document.getElementById('mobilImage');
+  if (target) observer.observe(target);
   </script>
 
 </body>
+
 </html>
