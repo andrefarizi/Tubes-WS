@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -14,13 +13,18 @@ class ShowroomController extends Controller
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX ex:  <http://www.example.org/showroom#>
 
-        SELECT ?nama ?lokasi
+        SELECT ?nama ?rating ?merek ?alamat ?noTelepon ?jamOperasional ?website ?lokasi
         WHERE {
           ?s rdf:type ex:Showroom ;
              ex:namaShowroom ?nama ;
-             ex:berlokasiDi ?lokasi .
+             ex:berlokasiDi ?lokasi ;
+             ex:rating ?rating ;
+             ex:merek ?merek ;
+             ex:alamat ?alamat ;
+             ex:noTelepon ?noTelepon ;
+             ex:jamOperasional ?jamOperasional ;
+             ex:website ?website .
         }
-        ORDER BY ?lokasi
         ";
 
         $response = Http::withHeaders([
@@ -227,7 +231,7 @@ public function search(Request $request)
         'VS' => 'MG',
         'MG5' => 'MG',
         'MG HS' => 'MG',
-        'panca' => 'dastun',
+        'panca' => 'datsun',
         'mitra ev' => 'wuling',
         'binguo' => 'wuling',
         'cloud ev' => 'wuling',
@@ -242,6 +246,16 @@ public function search(Request $request)
         's 450' => 'Mercedes-Benz',
         'glc' => 'Mercedes-Benz',
         'gls' => 'Mercedes-Benz',
+        'glc 300' => 'Mercedes-Benz',
+        'gls 450' => 'Mercedes-Benz',
+        'gla 200' => 'Mercedes-Benz',
+        'gle 450' => 'Mercedes-Benz',
+        'glb 200' => 'Mercedes-Benz',
+        'e300' => 'Mercedes-Benz',
+        'c200' => 'Mercedes-Benz',
+        'a200' => 'Mercedes-Benz',
+        'mercedes maybach' => 'Mercedes-Benz',
+        'amg gt' => 'Mercedes-Benz',
     ];
 
     // Check for multi-word brand names first

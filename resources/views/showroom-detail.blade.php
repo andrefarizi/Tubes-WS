@@ -228,6 +228,7 @@
         tel.querySelector('span').textContent = 'Tidak tersedia';
       }
 
+      
       const imgElement = document.getElementById('showroomImage');
       imgElement.src = logo;
 
