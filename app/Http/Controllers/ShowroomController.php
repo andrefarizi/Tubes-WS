@@ -85,14 +85,12 @@ public function search(Request $request)
 
    $keywordLeet = $keywordRaw;
 
-
     // buang selain huruf/angka/spasi/tanda minus, lalu rapikan spasi
     $keyword      = preg_replace('/[^a-z0-9\s\-]/', ' ', $keywordLeet);
     $keyword      = preg_replace('/\s+/', ' ', trim($keyword));
 
     // kompres huruf berulang (≥2 jadi 1) → toyotaaaaaaaa -> toyota
-    $keyword      = preg_replace('/([a-z])\1{1,}/', '$1', $keyword);
-
+    $keyword = preg_replace('/([a-z])\1{1,}/i', '$1', $keyword);
     // normalisasi singkatan jalan
     $keyword      = preg_replace('/\b(jl|jln)\b/', 'jalan', $keyword);
 
@@ -111,8 +109,8 @@ public function search(Request $request)
         'alphard' => 'Toyota',
         'velfire' => 'Toyota',
         'veloz' => 'Toyota',
-        'Raize' => 'Toyota',
-        'corola cros' => 'Toyota',
+        'raize' => 'Toyota',
+        'yaris ' => 'Toyota',
         'land cruiser' => 'Toyota',
         'corola' => 'Toyota',
         'agya' => 'Toyota',
@@ -187,14 +185,14 @@ public function search(Request $request)
         'm4' => 'BMW',
         'm5' => 'BMW',
         'm8' => 'BMW',
-        'BYD SEAL' => 'BYD',
-        'BYD ATTO 3' => 'BYD',
-        'BYD DOLPHIN' => 'BYD',
-        'BYD M6' => 'BYD',
-        'BYD SEALION 7' => 'BYD',
-        'BYD ATTO 1' => 'BYD',
-        'Tigo 9' => 'Chery',
-        'Tigo 8' => 'Chery',
+        'byd seal' => 'BYD',
+        'byd atto 3' => 'BYD',
+        'byd dolphin' => 'BYD',
+        'byd m6' => 'BYD',
+        'byd sea' => 'BYD',
+        'byd atto 1' => 'BYD',
+        'tigo 9' => 'Chery',
+        'tigo 8' => 'Chery',
         'Chery j6' => 'Chery',
         'tigo' => 'Chery',
         'omoda' => 'Chery',
@@ -212,6 +210,7 @@ public function search(Request $request)
         'livina' => 'Nissan',
         'tera' => 'Nissan',
         'leaf' => 'Nissan',
+        'nissan' => 'Nissan',
         'maginite' => 'Nissan',
         'kicks' => 'Nissan',
         'cx-3' => 'Mazda',
@@ -230,7 +229,7 @@ public function search(Request $request)
         'cyberster' => 'MG',
         'VS' => 'MG',
         'MG5' => 'MG',
-        'MG HS' => 'MG',
+        'mg hs' => 'MG',
         'panca' => 'datsun',
         'mitra ev' => 'wuling',
         'binguo' => 'wuling',
@@ -255,24 +254,36 @@ public function search(Request $request)
         'c200' => 'Mercedes-Benz',
         'a200' => 'Mercedes-Benz',
         'mercedes maybach' => 'Mercedes-Benz',
-        'amg gt' => 'Mercedes-Benz',
+        'amg gt' => 'Mercedes-Benz',    
+        'aion ut' => 'Aion',
+        'aion y' => 'Aion',
+        'aion v' => 'Aion',
+        'gelora' => 'dfsk',
+        'glory' => 'dfsk',
     ];
+        // 2. Normalisasi keyword dulu
+        $keywordOriginal = $keyword;
+        $keyword = strtolower($keyword);
 
-    // Check for multi-word brand names first
-    foreach ($brandMap as $key => $value) {
-        if (strpos($keyword, $key) !== false) {
-            $keyword = str_replace($key, $value, $keyword);
+        // 3. Ganti multi-kata / model yang ada di dalam keyword (case-insensitive)
+        foreach ($brandMap as $key => $value) {
+            if (strpos($keyword, $key) !== false) {
+                // pakai word boundary biar nggak nyangkut ke kata lain
+                $pattern = '/\b' . preg_quote($key, '/') . '\b/i';
+                $keyword = preg_replace($pattern, $value, $keyword);
+            }
         }
-    }
 
-    
-    // tokenisasi (untuk filter AND per-kata)
-    $tokens = $keyword === '' ? [] : explode(' ', $keyword);
-    
-    if (count($tokens) === 1) {
-        $t0 = $tokens[0];
-        if (isset($brandMap[$t0])) $tokens[0] = $brandMap[$t0];
-    }
+        // 4. Tokenisasi setelah di-replace
+        $tokens = preg_split('/\s+/', trim($keyword));
+
+        // 5. Kalau cuma satu kata, cek direct map juga (misal user cuma ngetik "avanza")
+        if (count($tokens) === 1) {
+            $t0 = $tokens[0]; // sudah lowercase
+            if (isset($brandMap[$t0])) {
+                $tokens[0] = $brandMap[$t0];
+            }
+        }
 
     // ORDER BY saat mode pencarian
     $orderBy = "ORDER BY ?nama";
@@ -296,14 +307,9 @@ public function search(Request $request)
     $lokEsc    = addslashes($lokasi);
     $lokFilter = ($lokEsc !== '') ? "FILTER (regex(?lokasi_norm, \"$lokEsc\", \"i\"))" : "";
 
-    // MODE AWAL: 25 showroom acak
     $isInitial = (empty($tokens) && $lokEsc === '' && $sort === '');
     if ($isInitial) {
         $query = "
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX ex:  <http://www.example.org/showroom#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
 SELECT ?nama ?rating ?merek ?alamat ?noTelepon ?jamOperasional ?website ?lokasi
 WHERE {
   ?s rdf:type ex:Showroom ;
@@ -323,11 +329,10 @@ WHERE {
     ) AS ?ratingNum
   )
 }
-ORDER BY RAND()
-
+ORDER BY ASC()
 ";
+
     } else {
-        // MODE PENCARIAN: normalisasi data → ganti "jl", "jl.", "jln", "jln." menjadi "jalan" di setiap field
         $query = "
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX ex:  <http://www.example.org/showroom#>

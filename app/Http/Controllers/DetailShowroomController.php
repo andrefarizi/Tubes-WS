@@ -40,6 +40,7 @@ class DetailShowroomController extends Controller
                     OPTIONAL { ?s ex:noTelepon ?noTelepon . }
                     OPTIONAL { ?s ex:jamOperasional ?jamOperasional . }
                     OPTIONAL { ?s ex:rating ?rating . }
+                    OPTIONAL { ?s ex:website ?website . }
                 }
                 ";
 

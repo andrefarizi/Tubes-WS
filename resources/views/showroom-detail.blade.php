@@ -243,69 +243,100 @@
       }
     }
 
-    function displayShowroomDetail(data) {
-      const nama = data.nama?.value || 'Nama tidak tersedia';
-      const merek = data.merek?.value || '-';
-      const lokasi = data.lokasi?.value || '-';
-      const alamat = data.alamat?.value || 'Alamat tidak tersedia';
-      const telepon = data.noTelepon?.value || data.telepon?.value || '-';
-      const jamOperasional = data.jamOperasional?.value || 'Tidak tersedia';
-      const rating = data.rating?.value || '-';
+function displayShowroomDetail(data) {
+    const nama = data.nama?.value || 'Nama tidak tersedia';
+    const merek = data.merek?.value || '-';
+    const lokasi = data.lokasi?.value || '-';
+    const alamat = data.alamat?.value || 'Alamat tidak tersedia';
+    const telepon = data.noTelepon?.value || data.telepon?.value || '-';
+    const jamOperasional = data.jamOperasional?.value || 'Tidak tersedia';
+    const rating = data.rating?.value || '-';
+    
+    // [PERUBAHAN 1: Ambil data website]
+    const website = data.website?.value || '#'; 
 
-      const logo = getBrandLogo(merek);
-      const ratingNum = parseFloat(rating) || 0;
+    const logo = getBrandLogo(merek);
+    const ratingNum = parseFloat(rating) || 0;
 
-      let stars = '-';
-      if (ratingNum > 0) {
+    let stars = '-';
+    if (ratingNum > 0) {
         const filled = '★'.repeat(Math.floor(ratingNum));
         const empty = '☆'.repeat(5 - Math.floor(ratingNum));
         stars = filled + empty;
-      }
+    }
 
-      document.getElementById('showroomName').textContent = nama;
-      document.getElementById('showroomMerek').textContent = merek;
-      document.getElementById('showroomLokasi').textContent = lokasi;
-      document.getElementById('showroomAlamat').textContent = alamat;
-      document.getElementById('showroomJamOperasional').textContent = jamOperasional;
-      document.getElementById('showroomRating').textContent = rating;
-      document.getElementById('showroomStars').textContent = stars;
+    document.getElementById('showroomName').textContent = nama;
+    document.getElementById('showroomMerek').textContent = merek;
+    document.getElementById('showroomLokasi').textContent = lokasi;
+    document.getElementById('showroomAlamat').textContent = alamat;
+    document.getElementById('showroomJamOperasional').textContent = jamOperasional;
+    document.getElementById('showroomRating').textContent = rating;
+    document.getElementById('showroomStars').textContent = stars;
 
-      const tel = document.getElementById('showroomTelepon');
-      if (telepon && telepon !== '-') {
+    const tel = document.getElementById('showroomTelepon');
+    if (telepon && telepon !== '-') {
         tel.href = `tel:${telepon}`;
         tel.querySelector('span').textContent = telepon;
-      } else {
+    } else {
         tel.removeAttribute('href');
         tel.querySelector('span').textContent = 'Tidak tersedia';
-      }
+    }
 
-      
-      const imgElement = document.getElementById('showroomImage');
-      imgElement.src = logo;
+    // [PERUBAHAN 2: Logic Website Resmi]
+    const web = document.getElementById('showroomWebsite');
+    const webSpan = web.querySelector('span'); 
+    
+    if (website && website !== '#' && website !== '-') {
+        // Pastikan URL memiliki protokol (http/https)
+        const fullUrl = website.startsWith('http') || website.startsWith('https') ? website : `http://${website}`;
+        
+        web.href = fullUrl;
+        web.target = '_blank';
+        
+        // Mengaktifkan style warna merah (active)
+        web.classList.remove('bg-gray-400', 'hover:bg-gray-500'); 
+        web.classList.add('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+        webSpan.textContent = 'Kunjungi Situs';
+        web.disabled = false;
+        web.removeAttribute('title');
+    } else {
+        web.removeAttribute('href');
+        web.removeAttribute('target');
+        // Menonaktifkan style (warna abu-abu)
+        web.classList.add('bg-gray-400', 'hover:bg-gray-500'); 
+        web.classList.remove('from-red-500', 'to-red-600', 'hover:from-red-600', 'hover:to-red-700');
+        webSpan.textContent = 'Tidak tersedia';
+        web.disabled = true;
+        web.title = 'Website tidak tersedia'; 
+    }
+    // [AKHIR LOGIC PERUBAHAN WEBSITE]
+    
+    const imgElement = document.getElementById('showroomImage');
+    imgElement.src = logo;
 
-      document.getElementById('loading').classList.add('hidden');
-      document.getElementById('detailContent').classList.remove('hidden');
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('detailContent').classList.remove('hidden');
 
 
-      const mobilImage = document.getElementById('mobilImage');
-      const mobilContainer = document.getElementById('mobilContainer');
+    const mobilImage = document.getElementById('mobilImage');
+    const mobilContainer = document.getElementById('mobilContainer');
 
-      const cleanMerek = merek.toLowerCase().replace('dealer ', '').trim();
-      const mobilSrc = `/images/${cleanMerek}.png`;
+    const cleanMerek = merek.toLowerCase().replace('dealer ', '').trim();
+    const mobilSrc = `/images/${cleanMerek}.png`;
 
-      mobilImage.src = mobilSrc;
+    mobilImage.src = mobilSrc;
 
-      fetch(mobilSrc)
+    fetch(mobilSrc)
         .then(res => {
-          if (res.ok) {
-            mobilContainer.classList.remove('hidden');
-            mobilImage.alt = `Mobil ${merek}`;
-          } else {
-            mobilContainer.classList.add('hidden');
-          }
+            if (res.ok) {
+                mobilContainer.classList.remove('hidden');
+                mobilImage.alt = `Mobil ${merek}`;
+            } else {
+                mobilContainer.classList.add('hidden');
+            }
         })
         .catch(() => mobilContainer.classList.add('hidden'));
-    }
+}
 
     function showError() {
       document.getElementById('loading').classList.add('hidden');
@@ -334,6 +365,7 @@
         'chery': "{{ asset('images/Chery-Logo-1997.png') }}",
         'ford': "{{ asset('images/580b57fcd9996e24bc43c47c.png') }}",
         'mazda': "{{ asset('images/mazda_logo.png') }}",
+        'aion': "{{ asset('images/aion2.png') }}",
         'default': "{{ asset('images/unnamed.png') }}"
       };
 
