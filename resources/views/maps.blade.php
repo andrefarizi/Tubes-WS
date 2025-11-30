@@ -369,7 +369,13 @@
         const fullAddress = `${alamat}, ${lokasi}, Sumatera Utara, Indonesia`;
 
         const promise = new Promise((resolve) => {
-          geocoder.geocode({ address: fullAddress }, (results, status) => {
+          geocoder.geocode({ 
+            address: fullAddress,
+            componentRestrictions: {
+              country: 'ID',
+              administrativeArea: 'Sumatera Utara'
+            }
+          }, (results, status) => {
             if (status === 'OK' && results[0]) {
               const location = results[0].geometry.location;
               

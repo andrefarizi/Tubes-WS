@@ -435,9 +435,11 @@
 
     // Event listeners untuk tombol rute
     document.getElementById('routeFromUSU').addEventListener('click', () => {
-      // Koordinat Universitas Sumatera Utara (USU) Medan
-      const usuLocation = { lat: 3.5688, lng: 98.6566 };
-      calculateRoute(usuLocation, 'Universitas Sumatera Utara');
+      // Koordinat USU Medan yang akurat - Gerbang Utama
+      // Lokasi: Gerbang Utama Universitas Sumatera Utara, Jl. Dr. T. Mansur, Padang Bulan
+      // Verifikasi: https://www.google.com/maps?q=3.5672804,98.6538982
+      const usuLocation = { lat: 3.5672804, lng: 98.6538982 };
+      calculateRoute(usuLocation, 'Universitas Sumatera Utara (Gerbang Utama)');
     });
 
     document.getElementById('routeFromCurrent').addEventListener('click', () => {
