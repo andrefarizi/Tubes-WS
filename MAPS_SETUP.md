@@ -1,29 +1,32 @@
 # Setup Google Maps API untuk WheelTrack
 
-## ⚠️ PENTING: API Key Sudah Terkonfigurasi!
+## ⚠️ PENTING: Setup API Key
 
-API Key Google Maps sudah tersimpan di file `.env`:
+API Key Google Maps harus disimpan di file `.env` (TIDAK DI-COMMIT ke GitHub):
 ```
-GOOGLE_MAPS_API_KEY=AIzaSyBy-ugy58EBTMwG2TqtBVlPhR8oF3LeMhA
+GOOGLE_MAPS_API_KEY=YOUR_API_KEY_HERE
 ```
 
-**Tidak perlu edit file view lagi!** Semua file sudah menggunakan `{{ config('maps.google_api_key') }}`.
+**Tidak perlu edit file view!** Semua file sudah menggunakan `{{ config('maps.google_api_key') }}`.
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Pastikan API Key Valid
+### 1. Dapatkan API Key dari Google Cloud Console
 
-Buka browser dan test API key:
+Follow instruksi di section "Cara Mendapatkan API Key Baru" di bawah.
+
+### 2. Tambahkan API Key ke .env
+
+Edit file `.env` dan tambahkan:
 ```
-https://maps.googleapis.com/maps/api/js?key=AIzaSyBy-ugy58EBTMwG2TqtBVlPhR8oF3LeMhA&callback=initMap
+GOOGLE_MAPS_API_KEY=YOUR_ACTUAL_API_KEY_HERE
 ```
 
-Jika muncul error "InvalidKeyMapError", berarti:
-- ❌ API key tidak valid atau expired
-- ❌ API belum di-enable
-- ❌ Billing belum aktif
+### 3. Pastikan .env di .gitignore
+
+File `.env` HARUS sudah ada di `.gitignore` (Laravel default sudah include)
 
 ### 2. Clear Config Cache
 
@@ -200,8 +203,16 @@ return [
 
 ### .env
 ```env
-GOOGLE_MAPS_API_KEY=AIzaSyBy-ugy58EBTMwG2TqtBVlPhR8oF3LeMhA
+# JANGAN share API key ini ke public/GitHub!
+# Setiap developer harus punya API key sendiri
+GOOGLE_MAPS_API_KEY=YOUR_API_KEY_HERE
 ```
+
+**⚠️ SECURITY WARNING:**
+- ❌ JANGAN commit file `.env` ke GitHub
+- ❌ JANGAN hardcode API key di file `.blade.php`
+- ✅ Gunakan `{{ config('maps.google_api_key') }}` di blade templates
+- ✅ Pastikan `.env` ada di `.gitignore`
 
 ---
 
