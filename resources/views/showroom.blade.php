@@ -149,6 +149,9 @@
           <a href="#form-searching" class="text-white hover:bg-red-800 px-4 py-2 rounded-lg transition-all duration-200 font-medium">
             <i class="fas fa-search mr-2"></i>Searching
           </a>
+          <a href="/maps" class="text-white bg-red-800 hover:bg-red-900 px-4 py-2 rounded-lg transition-all duration-200 font-semibold">
+            <i class="fas fa-map-marked-alt mr-2"></i>Peta Showroom
+          </a>
         </div>
         <!-- Mobile Menu Button -->
         <div class="md:hidden">
@@ -169,6 +172,9 @@
         </a>
         <a href="#form-searching" class="text-white hover:bg-red-800 block px-3 py-2 rounded-lg font-medium">
           <i class="fas fa-search mr-2"></i>Searching
+        </a>
+        <a href="/maps" class="text-white bg-red-800 hover:bg-red-900 block px-3 py-2 rounded-lg font-semibold">
+          <i class="fas fa-map-marked-alt mr-2"></i>Peta Showroom
         </a>
       </div>
     </div>

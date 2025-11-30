@@ -61,6 +61,12 @@
     .scroll-show {
       animation: fadeFloat 0.9s ease-out forwards;
     }
+
+    #map {
+      height: 450px;
+      width: 100%;
+      border-radius: 1rem;
+    }
   </style>
 </head>
 
@@ -165,6 +171,20 @@
                 </a>
 
               </div>
+
+              <div class="md:col-span-2">
+                <h2 class="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                  <i class="fas fa-map-marked-alt text-red-600"></i>
+                  Navigasi & Rute
+                </h2>
+                <a id="mapsLink" href="#" 
+                  class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 
+                  text-white font-bold rounded-xl shadow-lg hover:from-green-700 hover:to-green-800 
+                    transition-all duration-200 w-full justify-center">
+                  <i class="fas fa-route text-xl"></i>
+                  <span>Lihat Peta & Dapatkan Arah</span>
+                </a>
+              </div>
             </div>
 
 
@@ -185,6 +205,65 @@
         <i class="fas fa-arrow-left mr-2"></i>
         Kembali ke Daftar
       </a>
+    </div>
+
+    <!-- GOOGLE MAPS SECTION -->
+    <div id="mapsSection" class="hidden mt-12">
+      <div class="bg-white rounded-3xl shadow-2xl overflow-hidden p-8">
+        
+        <!-- Header Maps -->
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
+          <h2 class="text-3xl font-extrabold text-gray-900 flex items-center gap-3">
+            <i class="fas fa-map-marked-alt text-red-600"></i>
+            Lokasi & Rute
+          </h2>
+          <button id="openGoogleMaps" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg">
+            <i class="fab fa-google"></i>
+            <span>Buka di Google Maps</span>
+          </button>
+        </div>
+
+        <!-- Map Container -->
+        <div id="map" class="shadow-2xl mb-6"></div>
+
+        <!-- Route Info Cards -->
+        <div id="routeInfo" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" style="display: none;">
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl border-2 border-blue-200 shadow-md">
+            <p class="text-gray-600 text-sm font-semibold mb-1 flex items-center gap-2">
+              <i class="fas fa-route text-blue-600"></i>
+              Jarak
+            </p>
+            <p id="distance" class="text-blue-700 font-extrabold text-2xl">-</p>
+          </div>
+          <div class="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-xl border-2 border-green-200 shadow-md">
+            <p class="text-gray-600 text-sm font-semibold mb-1 flex items-center gap-2">
+              <i class="fas fa-clock text-green-600"></i>
+              Estimasi Waktu
+            </p>
+            <p id="duration" class="text-green-700 font-extrabold text-2xl">-</p>
+          </div>
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-5 rounded-xl border-2 border-orange-200 shadow-md">
+            <p class="text-gray-600 text-sm font-semibold mb-1 flex items-center gap-2">
+              <i class="fas fa-map-pin text-orange-600"></i>
+              Titik Awal
+            </p>
+            <p id="via" class="text-orange-700 font-bold text-lg leading-tight">-</p>
+          </div>
+        </div>
+
+        <!-- Route Buttons -->
+        <div class="flex flex-col md:flex-row gap-4">
+          <button id="routeFromUSU" class="flex-1 px-6 py-4 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl hover:from-red-700 hover:to-red-800 transition-all shadow-lg flex items-center justify-center gap-2">
+            <i class="fas fa-university text-xl"></i>
+            <span>Rute dari Universitas Sumatera Utara</span>
+          </button>
+          <button id="routeFromCurrent" class="flex-1 px-6 py-4 bg-gradient-to-r from-green-600 to-green-700 text-white font-bold rounded-xl hover:from-green-700 hover:to-green-800 transition-all shadow-lg flex items-center justify-center gap-2">
+            <i class="fas fa-location-crosshairs text-xl"></i>
+            <span>Rute dari Lokasi Saya Sekarang</span>
+          </button>
+        </div>
+
+      </div>
     </div>
 
     <!-- FOTO MOBIL -->
@@ -208,7 +287,206 @@
 
   </main>
 
+  <!-- Google Maps API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ config('maps.google_api_key') }}&callback=initMap&libraries=places" async defer></script>
+
   <script>
+    let map;
+    let directionsService;
+    let directionsRenderer;
+    let showroomLocation;
+    let currentShowroomData = {};
+
+    function initMap() {
+      // Default center (Medan)
+      const medanCenter = { lat: 3.5952, lng: 98.6722 };
+      
+      map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 13,
+        center: medanCenter,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true,
+        styles: [
+          {
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }]
+          }
+        ]
+      });
+
+      directionsService = new google.maps.DirectionsService();
+      directionsRenderer = new google.maps.DirectionsRenderer({
+        map: map,
+        suppressMarkers: false,
+        polylineOptions: {
+          strokeColor: '#DC2626',
+          strokeWeight: 5
+        }
+      });
+    }
+
+    function setupGoogleMaps(data) {
+      if (!map) {
+        console.warn('Map belum siap');
+        return;
+      }
+
+      const alamat = data.alamat?.value || '';
+      const lokasi = data.lokasi?.value || '';
+      const nama = data.nama?.value || '';
+      
+      // Geocode alamat untuk mendapat koordinat
+      const geocoder = new google.maps.Geocoder();
+      const fullAddress = `${alamat}, ${lokasi}, Sumatera Utara, Indonesia`;
+      
+      geocoder.geocode({ address: fullAddress }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          showroomLocation = results[0].geometry.location;
+          
+          // Create custom marker untuk showroom
+          const marker = new google.maps.Marker({
+            position: showroomLocation,
+            map: map,
+            title: nama,
+            animation: google.maps.Animation.DROP,
+            icon: {
+              url: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
+              scaledSize: new google.maps.Size(50, 50)
+            }
+          });
+
+          // Info window untuk marker
+          const infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div style="padding: 10px; max-width: 250px;">
+                <h3 style="font-weight: bold; color: #DC2626; margin-bottom: 8px;">${nama}</h3>
+                <p style="color: #374151; margin-bottom: 5px;"><i class="fas fa-map-marker-alt"></i> ${lokasi}</p>
+                <p style="color: #6B7280; font-size: 14px;">${alamat}</p>
+              </div>
+            `
+          });
+
+          marker.addListener('click', () => {
+            infoWindow.open(map, marker);
+          });
+
+          // Center map ke showroom dengan smooth animation
+          map.setCenter(showroomLocation);
+          map.setZoom(16);
+
+          // Setup tombol buka Google Maps
+          document.getElementById('openGoogleMaps').onclick = () => {
+            const url = `https://www.google.com/maps/search/?api=1&query=${showroomLocation.lat()},${showroomLocation.lng()}`;
+            window.open(url, '_blank');
+          };
+
+          // Show maps section
+          document.getElementById('mapsSection').classList.remove('hidden');
+          
+        } else {
+          console.warn('Geocoding gagal:', status);
+          // Fallback: tetap tampilkan map centered di Medan
+          document.getElementById('mapsSection').classList.remove('hidden');
+        }
+      });
+    }
+
+    function calculateRoute(origin, originName = '') {
+      if (!showroomLocation) {
+        alert('⚠️ Lokasi showroom belum tersedia. Mohon tunggu sebentar.');
+        return;
+      }
+
+      // Show loading di route info
+      document.getElementById('routeInfo').style.display = 'grid';
+      document.getElementById('distance').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      document.getElementById('duration').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      document.getElementById('via').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+      const request = {
+        origin: origin,
+        destination: showroomLocation,
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false
+      };
+
+      directionsService.route(request, (result, status) => {
+        if (status === 'OK') {
+          directionsRenderer.setDirections(result);
+          
+          const route = result.routes[0].legs[0];
+          document.getElementById('distance').textContent = route.distance.text;
+          document.getElementById('duration').textContent = route.duration.text;
+          
+          // Extract nama lokasi awal yang lebih readable
+          const startAddr = originName || route.start_address.split(',')[0];
+          document.getElementById('via').textContent = startAddr;
+          
+        } else {
+          alert('❌ Gagal menghitung rute: ' + status + '\n\nCoba lagi dalam beberapa saat.');
+          document.getElementById('routeInfo').style.display = 'none';
+        }
+      });
+    }
+
+    // Event listeners untuk tombol rute
+    document.getElementById('routeFromUSU').addEventListener('click', () => {
+      // Koordinat Universitas Sumatera Utara (USU) Medan
+      const usuLocation = { lat: 3.5688, lng: 98.6566 };
+      calculateRoute(usuLocation, 'Universitas Sumatera Utara');
+    });
+
+    document.getElementById('routeFromCurrent').addEventListener('click', () => {
+      if (navigator.geolocation) {
+        // Show loading indicator
+        const btn = document.getElementById('routeFromCurrent');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin text-xl"></i><span>Mendapatkan lokasi...</span>';
+        btn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const currentLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            calculateRoute(currentLocation, 'Lokasi Anda');
+            
+            // Restore button
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+          },
+          (error) => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            let errorMsg = 'Gagal mendapatkan lokasi Anda.';
+            if (error.code === 1) {
+              errorMsg = '⚠️ Akses lokasi ditolak.\n\nMohon izinkan akses lokasi di browser Anda.';
+            } else if (error.code === 2) {
+              errorMsg = '⚠️ Lokasi tidak tersedia.\n\nPastikan GPS/Location Services aktif.';
+            } else if (error.code === 3) {
+              errorMsg = '⚠️ Timeout mendapatkan lokasi.\n\nCoba lagi.';
+            }
+            
+            alert(errorMsg);
+            console.error('Geolocation error:', error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          }
+        );
+      } else {
+        alert('❌ Browser Anda tidak mendukung Geolocation.\n\nGunakan browser modern seperti Chrome, Firefox, atau Edge.');
+      }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
       const urlParams = new URLSearchParams(window.location.search);
       const showroomName = urlParams.get('nama');
@@ -244,6 +522,9 @@
     }
 
 function displayShowroomDetail(data) {
+    // Store data globally untuk Google Maps
+    currentShowroomData = data;
+    
     const nama = data.nama?.value || 'Nama tidak tersedia';
     const merek = data.merek?.value || '-';
     const lokasi = data.lokasi?.value || '-';
@@ -336,6 +617,12 @@ function displayShowroomDetail(data) {
             }
         })
         .catch(() => mobilContainer.classList.add('hidden'));
+    
+    // Set Maps link
+    document.getElementById('mapsLink').href = `{{ url('/maps/showroom') }}?nama=${encodeURIComponent(nama)}`;
+    
+    // Setup Google Maps dengan data showroom
+    setupGoogleMaps(data);
 }
 
     function showError() {
